@@ -22,17 +22,17 @@ Bu proje, bir web sayfasını çevrimdışı kullanılabilir hale getirmek için
 
 3. PyQt5 kurulumu (Linux için):
    - Arch Linux:
-     ```bash
-     sudo pacman -S python-pyqt5
-     ```
+	 ```bash
+	 sudo pacman -S python-pyqt5
+	 ```
    - Ubuntu/Debian:
-     ```bash
-     sudo apt install python3-pyqt5
-     ```
+	 ```bash
+	 sudo apt install python3-pyqt5
+	 ```
    - Fedora:
-     ```bash
-     sudo dnf install python3-qt5
-     ```
+	 ```bash
+	 sudo dnf install python3-qt5
+	 ```
 
 ## Kullanım
 
