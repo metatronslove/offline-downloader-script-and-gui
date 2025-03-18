@@ -6,7 +6,14 @@ from urllib.parse import urljoin, urlparse
 
 def download_and_convert_to_base64(url, base_url):
     try:
-        response = requests.get(urljoin(base_url, url))
+        # Handle protocol-relative URLs (e.g., "//example.com/file.png")
+        if url.startswith("//"):
+            url = f"{urlparse(base_url).scheme}:{url}"
+        # Handle root-relative and parent-relative URLs
+        elif not url.startswith(("http://", "https://")):
+            url = urljoin(base_url, url)
+
+        response = requests.get(url)
         response.raise_for_status()
         return base64.b64encode(response.content).decode('utf-8')
     except requests.RequestException as e:
@@ -57,7 +64,12 @@ def save_offline_page(url, output_filename):
     try:
         response = requests.get(url)
         soup = BeautifulSoup(response.content, 'html.parser')
-        base_url = f"{urlparse(url).scheme}://{urlparse(url).netloc}"
+
+        # Calculate base_url including the path
+        parsed_url = urlparse(url)
+        base_url = f"{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path}"
+        if not base_url.endswith('/'):
+            base_url = os.path.dirname(base_url) + '/'
 
         # Process CSS, JS, images, media, and SVG
         process_css(soup, base_url)
