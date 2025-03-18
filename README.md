@@ -13,8 +13,8 @@ Bu proje, bir web sayfasını çevrimdışı kullanılabilir hale getirmek için
 
 1. Projeyi klonlayın:
    ```bash
-   git clone https://github.com/kullanici_adi/offline-page-downloader.git
-   cd offline-page-downloader
+   git clone https://github.com/metatronslove/offline-downloader-script-and-gui.git
+   cd offline-downloader-script-and-gui-main
    ```
 
 2. Gerekli bağımlılıkları kurun:
