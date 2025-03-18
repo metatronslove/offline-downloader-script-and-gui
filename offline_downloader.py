@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import os
 import sys
-# Add the directory containing utils.py to the Python path
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# Python site-packages dizinini ekleyin
+sys.path.append("/usr/lib/python3.13/site-packages")  # Python sürümünüze göre ayarlayın
 
 from utils import save_offline_page
 
