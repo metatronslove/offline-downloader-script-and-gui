@@ -4,7 +4,7 @@ Bu proje, bir web sayfasını çevrimdışı kullanılabilir hale getirmek için
 
 ## Özellikler
 - Web sayfasını indirir ve çevrimdışı kullanılabilir hale getirir.
-- CSS, JavaScript, resimler, medya dosyaları ve SVG'leri Base64 formatına dönüştürerek HTML dosyasına gömülü hale getirir.
+- CSS, JavaScript, resimler, medya dosyaları ve SVG'leri HTML dosyasına gömülü hale getirir.
 - Terminalden veya GUI üzerinden kullanım seçeneği sunar.
 
 ## Kurulum
@@ -20,14 +20,18 @@ Bu proje, bir web sayfasını çevrimdışı kullanılabilir hale getirmek için
    pip install -r requirements.txt
    ```
 
-3. GTK4 kurulumu (Linux için):
+3. PyQt5 kurulumu (Linux için):
+   - Arch Linux:
+     ```bash
+     sudo pacman -S python-pyqt5
+     ```
    - Ubuntu/Debian:
      ```bash
-     sudo apt install libgtk-4-dev
+     sudo apt install python3-pyqt5
      ```
    - Fedora:
      ```bash
-     sudo dnf install gtk4-devel
+     sudo dnf install python3-qt5
      ```
 
 ## Kullanım
@@ -51,6 +55,8 @@ python3 offline_downloader_gui.py
 
 - URL'yi ve çıktı dosya adını girin.
 - "Download" butonuna tıklayarak indirme işlemini başlatın.
+- "Choose Download Folder" butonu ile indirme klasörünü seçin.
+- "Show Download Folder" butonu ile indirme klasörünü dosya yöneticisinde açın.
 
 ## Katkıda Bulunma
 Katkıda bulunmak için lütfen bir "Pull Request" açın. Sorunlarınızı "Issues" bölümünde bildirebilirsiniz.
