@@ -7,6 +7,9 @@ from PyQt5.QtWidgets import (
     QFileDialog, QMessageBox, QListWidget, QProgressBar, QTableWidget, QTableWidgetItem, QHeaderView
 )
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
+# Add the directory containing utils.py to the Python path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from utils import save_offline_page
 
 class DownloadThread(QThread):
