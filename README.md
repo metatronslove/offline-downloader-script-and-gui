@@ -6,6 +6,8 @@ Bu proje, bir web sayfasını çevrimdışı kullanılabilir hale getirmek için
 - Web sayfasını indirir ve çevrimdışı kullanılabilir hale getirir.
 - CSS, JavaScript, resimler, medya dosyaları ve SVG'leri HTML dosyasına gömülü hale getirir.
 - Terminalden veya GUI üzerinden kullanım seçeneği sunar.
+- Birden fazla indirmeyi sıraya koyar ve ilerleme durumunu gösterir.
+- İndirme tamamlandığında klasörü otomatik olarak açar.
 
 ## Kurulum
 
@@ -22,17 +24,17 @@ Bu proje, bir web sayfasını çevrimdışı kullanılabilir hale getirmek için
 
 3. PyQt5 kurulumu (Linux için):
    - Arch Linux:
-	 ```bash
-	 sudo pacman -S python-pyqt5
-	 ```
+     ```bash
+     sudo pacman -S python-pyqt5
+     ```
    - Ubuntu/Debian:
-	 ```bash
-	 sudo apt install python3-pyqt5
-	 ```
+     ```bash
+     sudo apt install python3-pyqt5
+     ```
    - Fedora:
-	 ```bash
-	 sudo dnf install python3-qt5
-	 ```
+     ```bash
+     sudo dnf install python3-qt5
+     ```
 
 ## Kullanım
 
@@ -54,7 +56,8 @@ python3 offline_downloader_gui.py
 ```
 
 - URL'yi ve çıktı dosya adını girin.
-- "Download" butonuna tıklayarak indirme işlemini başlatın.
+- "Add to Queue" butonuna tıklayarak indirmeyi sıraya ekleyin.
+- İndirme ilerlemesini tabloda takip edin.
 - "Choose Download Folder" butonu ile indirme klasörünü seçin.
 - "Show Download Folder" butonu ile indirme klasörünü dosya yöneticisinde açın.
 
