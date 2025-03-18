@@ -30,5 +30,5 @@ EOD
 
   # Use default icon (optional)
   mkdir -p "$pkgdir/usr/share/icons"
-  curl -sL https://raw.githubusercontent.com/metatronslove/offline-downloader-script-and-gui/main/assets/icon.png -o "$pkgdir/usr/share/icons/offline-downloader.png"
+  curl -sL https://raw.githubusercontent.com/metatronslove/offline-downloader-script-and-gui/main/icon.png -o "$pkgdir/usr/share/icons/offline-downloader.png"
 }
