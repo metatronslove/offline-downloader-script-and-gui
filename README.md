@@ -9,7 +9,58 @@ Bu proje, bir web sayfasını çevrimdışı kullanılabilir hale getirmek için
 - Birden fazla indirmeyi sıraya koyar ve ilerleme durumunu gösterir.
 - İndirme tamamlandığında klasörü otomatik olarak açar.
 
-## Kurulum
+## Arch Linux'te Kullanmak İçin Kurulum
+
+### Yay ile Kurulum (AUR)
+Eğer sisteminizde `yay` kuruluysa, paketi AUR'den aşağıdaki komutla kurabilirsiniz:
+
+```bash
+yay -S offline-page-downloader
+```
+
+### Manuel Kurulum (makepkg ile)
+Eğer `yay` kullanmak istemiyorsanız, paketi manuel olarak da kurabilirsiniz:
+
+1. Paketin AUR sayfasından `PKGBUILD` dosyasını indirin veya `git` ile klonlayın:
+
+   ```bash
+   git clone https://aur.archlinux.org/offline-page-downloader.git
+   cd offline-page-downloader
+   ```
+
+2. Paketi derleyin ve kurun:
+
+   ```bash
+   makepkg -si
+   ```
+
+---
+
+## Kullanım
+
+### Terminal Üzerinden Kullanım
+Terminal üzerinden web sayfası indirmek için:
+
+```bash
+offline_downloader <URL>
+```
+
+Örnek:
+
+```bash
+offline_downloader https://example.com
+```
+
+### Grafik Arayüz (GUI) ile Kullanım
+Grafik arayüzü başlatmak için:
+
+```bash
+offline_downloader_gui
+```
+
+Bu komut, kullanıcı dostu bir arayüz açacaktır. İndirmek istediğiniz web sayfasının URL'sini girin ve "İndir" butonuna tıklayın.
+
+## Python'da Geliştirme için Kurulum
 
 1. Projeyi klonlayın:
    ```bash
