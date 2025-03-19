@@ -1,0 +1,403 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline Page Downloader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            font-size: 14px;
+            margin: 33px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container, .content {
+            max-width: 800px;
+            margin: 0 auto;
+            margin-bottom: 33px;
+            padding: 33px 33px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1, h2, h3 {
+            color: #4a90e2;
+        }
+        a {
+            color: #4a90e2;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        code {
+            background-color: #f4f4f9;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #4a90e2;
+            color: white;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .badge:hover {
+            background-color: #357abd;
+        }
+        .qr-code {
+            text-align: center;
+            margin-top: 33px;
+        }
+        .qr-code img {
+            max-width: 200px;
+            height: auto;
+        }
+        h1 {
+            text-align: center;
+            color: #4a90e2;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #357abd;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        .progress {
+            width: 0%;
+            height: 30px;
+            background-color: #4caf50;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+            transition: width 0.3s ease;
+        }
+        .status {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Offline Page Downloader</h1>
+        <input type="text" id="url" placeholder="Enter URL">
+        <input type="text" id="filename" placeholder="Enter output filename">
+        <button onclick="downloadPage()">Download</button>
+        <div class="progress-bar">
+            <div class="progress" id="progress">0%</div>
+        </div>
+        <div id="status" class="status">Enter URL and filename to start download.</div>
+    </div>
+
+    <div class="content">
+        <h1>Offline Page Downloader</h1>
+        <p>
+            Bu proje, bir web sayfasını çevrimdışı kullanılabilir hale getirmek için tasarlanmıştır. Hem terminal üzerinden hem de kullanıcı dostu bir GUI aracılığıyla kullanılabilir. Web sayfasının tüm içeriğini (HTML, CSS, JavaScript, resimler, SVG, fontlar, vb.) tek bir HTML dosyasına gömerek, tamamen bağımsız bir çevrimdışı deneyim sunar.
+        </p>
+
+        <h2>🌟 Özellikler</h2>
+        <ul>
+            <li><strong>Web Sayfasını İndirir ve Çevrimdışı Hale Getirir:</strong> Tüm web sayfası içeriğini tek bir HTML dosyasına indirir.</li>
+            <li><strong>Tüm Kaynakları HTML'e Gömer:</strong>
+                <ul>
+                    <li>CSS dosyaları <code>&lt;style&gt;</code> etiketleri içine satır içi olarak eklenir.</li>
+                    <li>JavaScript dosyaları <code>&lt;script&gt;</code> etiketleri içine satır içi olarak eklenir.</li>
+                    <li>Resimler, SVG dosyaları, fontlar ve cursorlar Base64 formatına dönüştürülür veya doğrudan HTML'e enjekte edilir.</li>
+                </ul>
+            </li>
+            <li><strong>Terminal ve GUI Desteği:</strong> Hem terminalden hem de grafik arayüz üzerinden kullanım seçeneği sunar.</li>
+            <li><strong>İndirme Sırası ve İlerleme Durumu:</strong> Birden fazla indirmeyi sıraya koyar ve ilerleme durumunu gerçek zamanlı olarak gösterir.</li>
+            <li><strong>Klasör Yönetimi:</strong> İndirme tamamlandığında klasörü otomatik olarak açar.</li>
+        </ul>
+
+        <h2>🛠️ Kurulum</h2>
+        <h3>1. Projeyi Klonlayın</h3>
+        <p>Projeyi yerel makinenize klonlayın:</p>
+        <pre><code>git clone https://github.com/metatronslove/offline-downloader-script-and-gui.git
+cd offline-downloader-script-and-gui</code></pre>
+
+        <h3>2. Gerekli Bağımlılıkları Kurun</h3>
+        <p>Projenin çalışması için gerekli Python bağımlılıklarını yükleyin:</p>
+        <pre><code>pip install -r requirements.txt</code></pre>
+
+        <h3>3. GUI için Ek Kurulumlar (Linux)</h3>
+        <p>GUI uygulamasını kullanmak için PyQt5 veya GTK4 kurulumu yapmanız gerekebilir.</p>
+
+        <h4>PyQt5 Kurulumu:</h4>
+        <ul>
+            <li><strong>Arch Linux:</strong>
+                <pre><code>sudo pacman -S python-pyqt5</code></pre>
+            </li>
+            <li><strong>Ubuntu/Debian:</strong>
+                <pre><code>sudo apt install python3-pyqt5</code></pre>
+            </li>
+            <li><strong>Fedora:</strong>
+                <pre><code>sudo dnf install python3-qt5</code></pre>
+            </li>
+        </ul>
+
+        <h4>GTK4 Kurulumu:</h4>
+        <ul>
+            <li><strong>Ubuntu/Debian:</strong>
+                <pre><code>sudo apt install libgtk-4-dev</code></pre>
+            </li>
+            <li><strong>Fedora:</strong>
+                <pre><code>sudo dnf install gtk4-devel</code></pre>
+            </li>
+        </ul>
+
+        <h2>🚀 Kullanım</h2>
+        <h3>Terminalden Kullanım</h3>
+        <p>Terminalden bir web sayfasını indirmek için aşağıdaki komutu kullanın:</p>
+        <pre><code>python3 offline_downloader.py &lt;URL&gt; &lt;output_filename&gt;</code></pre>
+        <p><strong>Örnek Kullanım:</strong></p>
+        <pre><code>python3 offline_downloader.py https://example.com example.html</code></pre>
+
+        <h3>GUI ile Kullanım</h3>
+        <p>GUI uygulamasını başlatmak için aşağıdaki komutu kullanın:</p>
+        <pre><code>python3 offline_downloader_gui.py</code></pre>
+        <p><strong>Adımlar:</strong></p>
+        <ol>
+            <li>URL'yi ve çıktı dosya adını girin.</li>
+            <li>"Add to Queue" butonuna tıklayarak indirmeyi sıraya ekleyin.</li>
+            <li>İndirme ilerlemesini tabloda takip edin.</li>
+            <li>"Choose Download Folder" butonu ile indirme klasörünü seçin.</li>
+            <li>"Show Download Folder" butonu ile indirme klasörünü dosya yöneticisinde açın.</li>
+        </ol>
+
+        <h2>🤝 Katkıda Bulunma</h2>
+        <p>Bu projeye katkıda bulunmak isterseniz, lütfen bir <strong>Pull Request</strong> açın. Sorunlarınızı veya önerilerinizi <strong>Issues</strong> bölümünde bildirebilirsiniz.</p>
+
+        <h2>📜 Lisans</h2>
+        <p>Bu proje <strong>MIT Lisansı</strong> altında lisanslanmıştır. Daha fazla bilgi için <a href="LICENSE">LICENSE</a> dosyasına bakın.</p>
+
+        <h2>💖 Destek Ol</h2>
+        <p>Bu projeyi ve diğer çalışmalarımı desteklemek için bağışta bulunabilirsiniz. Katkılarınız, projelerin sürdürülebilirliğine büyük ölçüde yardımcı olur.</p>
+        <p><strong>Bağış Yapmadan Önce Lütfen Dikkat:</strong> Bağışlar geri iade edilemez. Destekleriniz için şimdiden teşekkür ederiz!</p>
+        <div class="qr-code">
+            <a href="https://ppr.ist/1T9dx8tUT" target="_blank">
+                <img src="1513592797QR.png" alt="Papara QR Code">
+            </a>
+            <p><a href="https://ppr.ist/1T9dx8tUT" class="badge" target="_blank">Bağış Yap</a></p>
+        </div>
+    </div>
+
+    <script>
+        async function downloadPage() {
+            const url = document.getElementById('url').value;
+            const filename = document.getElementById('filename').value;
+            const progressBar = document.getElementById('progress');
+            const status = document.getElementById('status');
+
+            if (!url || !filename) {
+                status.textContent = 'Please enter both URL and output filename.';
+                return;
+            }
+
+            status.textContent = 'Downloading HTML...';
+            progressBar.style.width = '0%';
+            progressBar.textContent = '0%';
+
+            try {
+                const response = await fetch(url);
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                status.textContent = 'Processing CSS...';
+                await processCSS(doc, url);
+                progressBar.style.width = '20%';
+                progressBar.textContent = '20%';
+
+                status.textContent = 'Processing JS...';
+                await processJS(doc, url);
+                progressBar.style.width = '40%';
+                progressBar.textContent = '40%';
+
+                status.textContent = 'Processing Images...';
+                await processImages(doc, url);
+                progressBar.style.width = '60%';
+                progressBar.textContent = '60%';
+
+                status.textContent = 'Processing Media...';
+                await processMedia(doc, url);
+                progressBar.style.width = '80%';
+                progressBar.textContent = '80%';
+
+                status.textContent = 'Processing Fonts and Cursors...';
+                await processFontsAndCursors(doc, url);
+                progressBar.style.width = '90%';
+                progressBar.textContent = '90%';
+
+                status.textContent = 'Saving file...';
+                const blob = new Blob([doc.documentElement.outerHTML], { type: 'text/html' });
+                const downloadUrl = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(downloadUrl);
+
+                progressBar.style.width = '100%';
+                progressBar.textContent = '100%';
+                status.textContent = 'Completed! File saved in Downloads folder.';
+            } catch (error) {
+                status.textContent = `Error: ${error.message}`;
+                progressBar.style.width = '0%';
+                progressBar.textContent = '0%';
+            }
+        }
+
+        async function processCSS(doc, baseUrl) {
+            const stylesheets = doc.querySelectorAll('link[rel="stylesheet"], style');
+            for (const style of stylesheets) {
+                if (style.tagName === 'LINK') {
+                    const cssUrl = new URL(style.href, baseUrl).href;
+                    try {
+                        const response = await fetch(cssUrl);
+                        const cssText = await response.text();
+                        const updatedCss = await replaceCSSUrls(cssText, cssUrl);
+                        const newStyle = doc.createElement('style');
+                        newStyle.textContent = updatedCss;
+                        style.replaceWith(newStyle);
+                    } catch (error) {
+                        console.error(`Error processing CSS: ${cssUrl}`, error);
+                    }
+                } else if (style.tagName === 'STYLE') {
+                    const cssText = style.textContent;
+                    const updatedCss = await replaceCSSUrls(cssText, baseUrl);
+                    style.textContent = updatedCss;
+                }
+            }
+        }
+
+        async function replaceCSSUrls(cssText, baseUrl) {
+            const urlPattern = /url\(\s*['"]?(.*?)['"]?\s*\)/g;
+            const updatedCss = await Promise.all(
+                Array.from(cssText.matchAll(urlPattern)).map(async (match) => {
+                    const resourceUrl = match[1];
+                    const fullUrl = new URL(resourceUrl, baseUrl).href;
+                    try {
+                        const response = await fetch(fullUrl);
+                        const blob = await response.blob();
+                        const base64 = await blobToBase64(blob);
+                        return `url(${base64})`;
+                    } catch (error) {
+                        console.error(`Error fetching resource: ${fullUrl}`, error);
+                        return match[0];
+                    }
+                })
+            );
+            return cssText.replace(urlPattern, () => updatedCss.shift());
+        }
+
+        async function processJS(doc, baseUrl) {
+            const scripts = doc.querySelectorAll('script[src]');
+            for (const script of scripts) {
+                const jsUrl = new URL(script.src, baseUrl).href;
+                try {
+                    const response = await fetch(jsUrl);
+                    const jsText = await response.text();
+                    const newScript = doc.createElement('script');
+                    newScript.textContent = jsText;
+                    script.replaceWith(newScript);
+                } catch (error) {
+                    console.error(`Error processing JS: ${jsUrl}`, error);
+                }
+            }
+        }
+
+        async function processImages(doc, baseUrl) {
+            const images = doc.querySelectorAll('img[src]');
+            for (const img of images) {
+                const imgUrl = new URL(img.src, baseUrl).href;
+                try {
+                    const response = await fetch(imgUrl);
+                    const contentType = response.headers.get('Content-Type');
+
+                    if (contentType === 'image/svg+xml') {
+                        // SVG dosyasını XML olarak enjekte et
+                        const svgText = await response.text();
+                        const parser = new DOMParser();
+                        const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+                        const svgElement = svgDoc.documentElement;
+
+                        // SVG'yi img etiketinin yerine yerleştir
+                        img.replaceWith(svgElement);
+                    } else {
+                        // Diğer resim türlerini base64'e dönüştür
+                        const blob = await response.blob();
+                        const base64 = await blobToBase64(blob);
+                        img.src = base64;
+                    }
+                } catch (error) {
+                    console.error(`Error processing image: ${imgUrl}`, error);
+                }
+            }
+        }
+
+        async function processMedia(doc, baseUrl) {
+            const mediaElements = doc.querySelectorAll('audio[src], video[src], source[src]');
+            for (const media of mediaElements) {
+                const mediaUrl = new URL(media.src, baseUrl).href;
+                try {
+                    const response = await fetch(mediaUrl);
+                    const blob = await response.blob();
+                    const base64 = await blobToBase64(blob);
+                    media.src = base64;
+                } catch (error) {
+                    console.error(`Error processing media: ${mediaUrl}`, error);
+                }
+            }
+        }
+
+        async function processFontsAndCursors(doc, baseUrl) {
+            const fonts = doc.querySelectorAll('link[rel="stylesheet"], style');
+            for (const font of fonts) {
+                const cssText = font.textContent || await (await fetch(font.href)).text();
+                const updatedCss = await replaceCSSUrls(cssText, baseUrl);
+                if (font.tagName === 'LINK') {
+                    const newStyle = doc.createElement('style');
+                    newStyle.textContent = updatedCss;
+                    font.replaceWith(newStyle);
+                } else {
+                    font.textContent = updatedCss;
+                }
+            }
+        }
+
+        async function blobToBase64(blob) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.readAsDataURL(blob);
+            });
+        }
+    </script>
+
+</body></html>
