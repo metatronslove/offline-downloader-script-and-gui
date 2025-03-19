@@ -206,198 +206,207 @@ cd offline-downloader-script-and-gui</code></pre>
     </div>
 
     <script>
-        async function downloadPage() {
-            const url = document.getElementById('url').value;
-            const filename = document.getElementById('filename').value;
-            const progressBar = document.getElementById('progress');
-            const status = document.getElementById('status');
+async function downloadPage() {
+    const url = document.getElementById('url').value;
+    const filename = document.getElementById('filename').value;
+    const progressBar = document.getElementById('progress');
+    const status = document.getElementById('status');
 
-            if (!url || !filename) {
-                status.textContent = 'Please enter both URL and output filename.';
-                return;
-            }
+    if (!url || !filename) {
+        status.textContent = 'Please enter both URL and output filename.';
+        return;
+    }
 
-            status.textContent = 'Downloading HTML...';
-            progressBar.style.width = '0%';
-            progressBar.textContent = '0%';
+    status.textContent = 'Downloading HTML...';
+    progressBar.style.width = '0%';
+    progressBar.textContent = '0%';
 
+    try {
+        const response = await fetch(url);
+        const html = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+
+        status.textContent = 'Processing CSS...';
+        await processCSS(doc, url);
+        progressBar.style.width = '20%';
+        progressBar.textContent = '20%';
+
+        status.textContent = 'Processing JS...';
+        await processJS(doc, url);
+        progressBar.style.width = '40%';
+        progressBar.textContent = '40%';
+
+        status.textContent = 'Processing Images...';
+        await processImages(doc, url);
+        progressBar.style.width = '60%';
+        progressBar.textContent = '60%';
+
+        status.textContent = 'Processing Media...';
+        await processMedia(doc, url);
+        progressBar.style.width = '80%';
+        progressBar.textContent = '80%';
+
+        status.textContent = 'Processing Fonts and Cursors...';
+        await processFontsAndCursors(doc, url);
+        progressBar.style.width = '90%';
+        progressBar.textContent = '90%';
+
+        status.textContent = 'Saving file...';
+        const blob = new Blob([doc.documentElement.outerHTML], { type: 'text/html' });
+        const downloadUrl = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(downloadUrl);
+
+        progressBar.style.width = '100%';
+        progressBar.textContent = '100%';
+        status.textContent = 'Completed! File saved in Downloads folder.';
+    } catch (error) {
+        status.textContent = `Error: ${error.message}`;
+        progressBar.style.width = '0%';
+        progressBar.textContent = '0%';
+    }
+}
+
+async function processCSS(doc, baseUrl) {
+    const stylesheets = doc.querySelectorAll('link[rel="stylesheet"], style');
+    for (const style of stylesheets) {
+        if (style.tagName === 'LINK') {
+            const cssUrl = new URL(style.href, baseUrl).href;
             try {
-                const response = await fetch(url);
-                const html = await response.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-
-                status.textContent = 'Processing CSS...';
-                await processCSS(doc, url);
-                progressBar.style.width = '20%';
-                progressBar.textContent = '20%';
-
-                status.textContent = 'Processing JS...';
-                await processJS(doc, url);
-                progressBar.style.width = '40%';
-                progressBar.textContent = '40%';
-
-                status.textContent = 'Processing Images...';
-                await processImages(doc, url);
-                progressBar.style.width = '60%';
-                progressBar.textContent = '60%';
-
-                status.textContent = 'Processing Media...';
-                await processMedia(doc, url);
-                progressBar.style.width = '80%';
-                progressBar.textContent = '80%';
-
-                status.textContent = 'Processing Fonts and Cursors...';
-                await processFontsAndCursors(doc, url);
-                progressBar.style.width = '90%';
-                progressBar.textContent = '90%';
-
-                status.textContent = 'Saving file...';
-                const blob = new Blob([doc.documentElement.outerHTML], { type: 'text/html' });
-                const downloadUrl = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = downloadUrl;
-                link.download = filename;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(downloadUrl);
-
-                progressBar.style.width = '100%';
-                progressBar.textContent = '100%';
-                status.textContent = 'Completed! File saved in Downloads folder.';
+                const response = await fetch(cssUrl);
+                const cssText = await response.text();
+                const updatedCss = await replaceCSSUrls(cssText, cssUrl);
+                const newStyle = doc.createElement('style');
+                newStyle.textContent = updatedCss;
+                style.replaceWith(newStyle);
             } catch (error) {
-                status.textContent = `Error: ${error.message}`;
-                progressBar.style.width = '0%';
-                progressBar.textContent = '0%';
+                console.error(`Error processing CSS: ${cssUrl}`, error);
             }
+        } else if (style.tagName === 'STYLE') {
+            const cssText = style.textContent;
+            const updatedCss = await replaceCSSUrls(cssText, baseUrl);
+            style.textContent = updatedCss;
         }
+    }
+}
 
-        async function processCSS(doc, baseUrl) {
-            const stylesheets = doc.querySelectorAll('link[rel="stylesheet"], style');
-            for (const style of stylesheets) {
-                if (style.tagName === 'LINK') {
-                    const cssUrl = new URL(style.href, baseUrl).href;
-                    try {
-                        const response = await fetch(cssUrl);
-                        const cssText = await response.text();
-                        const updatedCss = await replaceCSSUrls(cssText, cssUrl);
-                        const newStyle = doc.createElement('style');
-                        newStyle.textContent = updatedCss;
-                        style.replaceWith(newStyle);
-                    } catch (error) {
-                        console.error(`Error processing CSS: ${cssUrl}`, error);
-                    }
-                } else if (style.tagName === 'STYLE') {
-                    const cssText = style.textContent;
-                    const updatedCss = await replaceCSSUrls(cssText, baseUrl);
-                    style.textContent = updatedCss;
-                }
+async function replaceCSSUrls(cssText, baseUrl) {
+    const urlPattern = /url\(\s*['"]?(.*?)['"]?\s*\)/g;
+    const updatedCss = await Promise.all(
+        Array.from(cssText.matchAll(urlPattern)).map(async (match) => {
+            const resourceUrl = match[1];
+            const fullUrl = new URL(resourceUrl, baseUrl).href;
+            try {
+                const response = await fetch(fullUrl);
+                const blob = await response.blob();
+                const base64 = await blobToBase64(blob);
+                return `url(${base64})`;
+            } catch (error) {
+                console.error(`Error fetching resource: ${fullUrl}`, error);
+                return match[0];
             }
+        })
+    );
+    return cssText.replace(urlPattern, () => updatedCss.shift());
+}
+
+async function processJS(doc, baseUrl) {
+    const scripts = doc.querySelectorAll('script[src]');
+    for (const script of scripts) {
+        const jsUrl = new URL(script.src, baseUrl).href;
+        try {
+            const response = await fetch(jsUrl);
+            const jsText = await response.text();
+            const newScript = doc.createElement('script');
+            newScript.textContent = jsText;
+            script.replaceWith(newScript);
+        } catch (error) {
+            console.error(`Error processing JS: ${jsUrl}`, error);
+        }
+    }
+}
+
+async function processImages(doc, baseUrl) {
+    const images = doc.querySelectorAll('img[src]');
+    for (const img of images) {
+        let imgUrl = img.src;
+
+        // Protokol göreli URL'leri (//dosya.jpg) tam URL'ye dönüştür
+        if (imgUrl.startsWith('//')) {
+            imgUrl = `${new URL(baseUrl).protocol}${imgUrl}`;
         }
 
-        async function replaceCSSUrls(cssText, baseUrl) {
-            const urlPattern = /url\(\s*['"]?(.*?)['"]?\s*\)/g;
-            const updatedCss = await Promise.all(
-                Array.from(cssText.matchAll(urlPattern)).map(async (match) => {
-                    const resourceUrl = match[1];
-                    const fullUrl = new URL(resourceUrl, baseUrl).href;
-                    try {
-                        const response = await fetch(fullUrl);
-                        const blob = await response.blob();
-                        const base64 = await blobToBase64(blob);
-                        return `url(${base64})`;
-                    } catch (error) {
-                        console.error(`Error fetching resource: ${fullUrl}`, error);
-                        return match[0];
-                    }
-                })
-            );
-            return cssText.replace(urlPattern, () => updatedCss.shift());
-        }
+        // Path URL'leri base URL ile birleştir
+        imgUrl = new URL(imgUrl, baseUrl).href;
 
-        async function processJS(doc, baseUrl) {
-            const scripts = doc.querySelectorAll('script[src]');
-            for (const script of scripts) {
-                const jsUrl = new URL(script.src, baseUrl).href;
-                try {
-                    const response = await fetch(jsUrl);
-                    const jsText = await response.text();
-                    const newScript = doc.createElement('script');
-                    newScript.textContent = jsText;
-                    script.replaceWith(newScript);
-                } catch (error) {
-                    console.error(`Error processing JS: ${jsUrl}`, error);
-                }
+        try {
+            const response = await fetch(imgUrl);
+            const contentType = response.headers.get('Content-Type');
+
+            if (contentType === 'image/svg+xml') {
+                // SVG dosyasını XML olarak enjekte et
+                const svgText = await response.text();
+                const parser = new DOMParser();
+                const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+                const svgElement = svgDoc.documentElement;
+
+                // SVG'yi img etiketinin yerine yerleştir
+                img.replaceWith(svgElement);
+            } else {
+                // Diğer resim türlerini base64'e dönüştür
+                const blob = await response.blob();
+                const base64 = await blobToBase64(blob);
+                img.src = base64;
             }
+        } catch (error) {
+            console.error(`Error processing image: ${imgUrl}`, error);
         }
+    }
+}
 
-        async function processImages(doc, baseUrl) {
-            const images = doc.querySelectorAll('img[src]');
-            for (const img of images) {
-                const imgUrl = new URL(img.src, baseUrl).href;
-                try {
-                    const response = await fetch(imgUrl);
-                    const contentType = response.headers.get('Content-Type');
-
-                    if (contentType === 'image/svg+xml') {
-                        // SVG dosyasını XML olarak enjekte et
-                        const svgText = await response.text();
-                        const parser = new DOMParser();
-                        const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
-                        const svgElement = svgDoc.documentElement;
-
-                        // SVG'yi img etiketinin yerine yerleştir
-                        img.replaceWith(svgElement);
-                    } else {
-                        // Diğer resim türlerini base64'e dönüştür
-                        const blob = await response.blob();
-                        const base64 = await blobToBase64(blob);
-                        img.src = base64;
-                    }
-                } catch (error) {
-                    console.error(`Error processing image: ${imgUrl}`, error);
-                }
-            }
+async function processMedia(doc, baseUrl) {
+    const mediaElements = doc.querySelectorAll('audio[src], video[src], source[src]');
+    for (const media of mediaElements) {
+        const mediaUrl = new URL(media.src, baseUrl).href;
+        try {
+            const response = await fetch(mediaUrl);
+            const blob = await response.blob();
+            const base64 = await blobToBase64(blob);
+            media.src = base64;
+        } catch (error) {
+            console.error(`Error processing media: ${mediaUrl}`, error);
         }
+    }
+}
 
-        async function processMedia(doc, baseUrl) {
-            const mediaElements = doc.querySelectorAll('audio[src], video[src], source[src]');
-            for (const media of mediaElements) {
-                const mediaUrl = new URL(media.src, baseUrl).href;
-                try {
-                    const response = await fetch(mediaUrl);
-                    const blob = await response.blob();
-                    const base64 = await blobToBase64(blob);
-                    media.src = base64;
-                } catch (error) {
-                    console.error(`Error processing media: ${mediaUrl}`, error);
-                }
-            }
+async function processFontsAndCursors(doc, baseUrl) {
+    const fonts = doc.querySelectorAll('link[rel="stylesheet"], style');
+    for (const font of fonts) {
+        const cssText = font.textContent || await (await fetch(font.href)).text();
+        const updatedCss = await replaceCSSUrls(cssText, baseUrl);
+        if (font.tagName === 'LINK') {
+            const newStyle = doc.createElement('style');
+            newStyle.textContent = updatedCss;
+            font.replaceWith(newStyle);
+        } else {
+            font.textContent = updatedCss;
         }
+    }
+}
 
-        async function processFontsAndCursors(doc, baseUrl) {
-            const fonts = doc.querySelectorAll('link[rel="stylesheet"], style');
-            for (const font of fonts) {
-                const cssText = font.textContent || await (await fetch(font.href)).text();
-                const updatedCss = await replaceCSSUrls(cssText, baseUrl);
-                if (font.tagName === 'LINK') {
-                    const newStyle = doc.createElement('style');
-                    newStyle.textContent = updatedCss;
-                    font.replaceWith(newStyle);
-                } else {
-                    font.textContent = updatedCss;
-                }
-            }
-        }
-
-        async function blobToBase64(blob) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.readAsDataURL(blob);
-            });
-        }
+async function blobToBase64(blob) {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.readAsDataURL(blob);
+    });
+}
     </script>
 
 </body></html>
