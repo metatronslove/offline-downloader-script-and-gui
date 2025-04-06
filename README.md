@@ -9,6 +9,16 @@ Bu proje, bir web sayfasını çevrimdışı kullanılabilir hale getirmek için
 - Birden fazla indirmeyi sıraya koyar ve ilerleme durumunu gösterir.
 - İndirme tamamlandığında klasörü otomatik olarak açar.
 
+debian-install-offline-downloader.sh
+
+## Debian/Ubuntu Linux'te Kullanmak İçin Kurulum
+
+`debian-install-offline-downloader.sh` dosyasını indirin ve çalıştırılabilir olarak işaretleyip çalıştırın:
+
+```bash
+sudo ./debian-install-offline-downloader.sh
+```
+
 ## Arch Linux'te Kullanmak İçin Kurulum
 
 ### Yay ile Kurulum (AUR)
