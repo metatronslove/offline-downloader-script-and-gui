@@ -58,14 +58,14 @@ rm -rf offline-page-downloader.tar.gz offline-downloader-script-and-gui-offline-
 # Completion message
 echo -e "${GREEN}"
 echo "╔════════════════════════════════════════════════╗"
-echo "║          Installation Successful!             ║"
+echo "║           Installation Successful!             ║"
 echo "╚════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
 # Usage instructions
 echo -e "${CYAN}HOW TO USE:${NC}"
-echo -e "1. Terminal version: ${YELLOW}offline_downloader <URL>${NC}"
-echo -e "   Example: offline_downloader https://example.com"
+echo -e "1. Terminal version: ${YELLOW}offline_downloader <URL> <filename.html>${NC}"
+echo -e "   Example: offline_downloader https://example.com filename.html"
 echo -e ""
 echo -e "2. GUI version: ${YELLOW}offline_downloader_gui${NC}"
 echo -e "   (Look for 'Offline Page Downloader' in your application menu)"
