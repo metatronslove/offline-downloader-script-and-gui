@@ -50,13 +50,13 @@ Eğer `yay` kullanmak istemiyorsanız, paketi manuel olarak da kurabilirsiniz:
 Terminal üzerinden web sayfası indirmek için:
 
 ```bash
-offline_downloader <URL>
+offline_downloader <URL> <filename.html>
 ```
 
 Örnek:
 
 ```bash
-offline_downloader https://example.com
+offline_downloader https://example.com filename.html
 ```
 
 ### Grafik Arayüz (GUI) ile Kullanım
